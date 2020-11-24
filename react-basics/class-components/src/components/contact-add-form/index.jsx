@@ -52,19 +52,21 @@ class ContactAddForm extends Component {
     }
 
     render() {
+        const { name, familyName, phoneNumber } = this.state;
+
         return (
             <form className={styles.form_container} onSubmit={this.handleSubmit}>
                 <label>
                     Name:
-                    <input type="text" name="name" value={this.state.name} onChange={this.handleChange} />
+                    <input type="text" name="name" value={name} onChange={this.handleChange} />
                 </label>
                 <label>
                     Family Name:
-                    <input type="text" name="familyName" value={this.state.familyName} onChange={this.handleChange} />
+                    <input type="text" name="familyName" value={familyName} onChange={this.handleChange} />
                 </label>
                 <label>
                     Phone Number:
-                    <input type="number" name="phoneNumber" value={this.state.phoneNumber} onChange={this.handleChange} />
+                    <input type="number" name="phoneNumber" value={phoneNumber} onChange={this.handleChange} />
                 </label>
                 <input type="submit" value="Add" />
                 </form>
