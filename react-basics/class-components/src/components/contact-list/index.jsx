@@ -1,5 +1,6 @@
 import React from "react";
 import ContactItem from "../contact-item";
+import ContactAddForm from "../contact-add-form";
 
 import styles from "./style.module.scss";
 
@@ -46,6 +47,9 @@ class ContactList extends React.Component {
     this.state = {
       contactsList: [],
     };
+
+    this.renderContactAddForm = this.renderContactAddForm.bind(this);
+    this.onSubmitAddForm = this.onSubmitAddForm.bind(this);
   }
 
   componentDidMount() {
@@ -61,12 +65,33 @@ class ContactList extends React.Component {
       <ContactItem contactData={contactList} key={contactList.ID} />
     );
   }
+
+  renderContactAddForm = (contactsList) => {
+    if (contactsList.length) {
+        return <ContactAddForm onSubmitForm={this.onSubmitAddForm} />;
+    }
+  }
+
+  onSubmitAddForm = (formData) => {
+    const { contactsList } = this.state;
+
+    const lastContactId = contactsList[contactsList.length - 1].ID;
+    formData['ID'] = lastContactId + 1;
+    console.log(formData);
+
+    this.setState(state => {
+      return {
+        contactsList: [...state.contactsList, formData]
+      };
+    });
+  }
   
   render() {
-    const {contactsList} = this.state;
+    const { contactsList } = this.state;
 
     return (
       <div className={styles.listWrapper}>
+        { this.renderContactAddForm(contactsList) }
         {contactsList.map(contactList => this.renderContactItem(contactList))}
       </div>
     );
