@@ -1,5 +1,6 @@
 import React from "react";
 import ContactItem from "../contact-item";
+
 import styles from "./style.module.scss";
 
 const mockApiData = [
@@ -46,16 +47,32 @@ class ContactList extends React.Component {
       contactsList: [],
     };
   }
+
   componentDidMount() {
-    // TODO:  start api fetch here
+    fetchFromMockApiEndPoint().then(contactsList => {
+      this.setState(state => {
+        return {
+          ...state.contactsList,
+          contactsList
+        }
+      });
+    }).catch(error => {
+      console.log(error);
+    });
   }
+
+  renderContactItem = (contactList) => {
+    return (
+      <ContactItem contactData={contactList} key={contactList.ID} />
+    );
+  }
+  
   render() {
+    const {contactsList} = this.state;
+
     return (
       <div className={styles.listWrapper}>
-        {/* TODO:  edit here  and make it dynamic with API Call and mock data that provided in top of this file - use map for arrays in here and make it render at another function*/}
-        <ContactItem contactData={sampleContactData} />
-        <ContactItem contactData={sampleContactData} />
-        <ContactItem contactData={sampleContactData} />
+        {contactsList.map(contactList => this.renderContactItem(contactList))}
       </div>
     );
   }
