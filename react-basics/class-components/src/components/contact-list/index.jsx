@@ -50,12 +50,7 @@ class ContactList extends React.Component {
 
   componentDidMount() {
     fetchFromMockApiEndPoint().then(contactsList => {
-      this.setState(state => {
-        return {
-          ...state.contactsList,
-          contactsList
-        }
-      });
+      this.setState({ contactsList });
     }).catch(error => {
       console.log(error);
     });
