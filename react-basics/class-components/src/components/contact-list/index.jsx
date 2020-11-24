@@ -1,10 +1,11 @@
 import React from "react";
 import ContactItem from "../contact-item";
 import ContactAddForm from "../contact-add-form";
+import ContactFilterForm from "../contact-filter";
 
 import styles from "./style.module.scss";
 
-const mockApiData = [
+let mockApiData = [
   {
     name: "Mahsa",
     familyName: "Pahlevani",
@@ -46,10 +47,11 @@ class ContactList extends React.Component {
     super(props);
     this.state = {
       contactsList: [],
+      filterText: '',
     };
 
-    this.renderContactAddForm = this.renderContactAddForm.bind(this);
     this.onSubmitAddForm = this.onSubmitAddForm.bind(this);
+    this.onFilterList = this.onFilterList.bind(this);
   }
 
   componentDidMount() {
@@ -66,32 +68,51 @@ class ContactList extends React.Component {
     );
   }
 
-  renderContactAddForm = (contactsList) => {
-    if (contactsList.length) {
-        return <ContactAddForm onSubmitForm={this.onSubmitAddForm} />;
-    }
-  }
-
   onSubmitAddForm = (formData) => {
     const { contactsList } = this.state;
 
     const lastContactId = contactsList[contactsList.length - 1].ID;
     formData['ID'] = lastContactId + 1;
-    console.log(formData);
 
     this.setState(state => {
       return {
         contactsList: [...state.contactsList, formData]
       };
     });
+    mockApiData = [...mockApiData, formData];
   }
-  
+
+  onFilterList = (event) => {
+    const { value } = event.target;
+
+    this.setState(state => {
+      let newContactsList;
+      if (value === '') {
+        newContactsList = mockApiData;
+      } else {
+        newContactsList = mockApiData.filter(item => {
+          const { name, familyName, phoneNumber } = item;
+          const [ newName, newFamilyName ] = [ name.toLowerCase(), familyName.toLowerCase() ];
+          const [ newValue ] = [ value.toLowerCase() ];
+          
+          return newName.includes(newValue) || newFamilyName.includes(newValue) || phoneNumber.includes(newValue);
+        });
+      }
+
+      return {
+        filterText: value,
+        contactsList: newContactsList
+      }
+    });
+  }
+
   render() {
-    const { contactsList } = this.state;
+    const { contactsList, filterText } = this.state;
 
     return (
       <div className={styles.listWrapper}>
-        { this.renderContactAddForm(contactsList) }
+        <ContactAddForm onSubmitForm={this.onSubmitAddForm} />
+        <ContactFilterForm text={filterText} handleFilter={this.onFilterList} />
         {contactsList.map(contactList => this.renderContactItem(contactList))}
       </div>
     );
