@@ -87,9 +87,6 @@ class ContactList extends React.Component {
 
     this.setState(state => {
       let newContactsList;
-      if (value === '') {
-        newContactsList = mockApiData;
-      } else {
         newContactsList = mockApiData.filter(item => {
           const { name, familyName, phoneNumber } = item;
           const [ newName, newFamilyName ] = [ name.toLowerCase(), familyName.toLowerCase() ];
@@ -97,7 +94,6 @@ class ContactList extends React.Component {
           
           return newName.includes(newValue) || newFamilyName.includes(newValue) || phoneNumber.includes(newValue);
         });
-      }
 
       return {
         filterText: value,
